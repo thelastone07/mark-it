@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .url-display {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #e0e0e0;
+      word-break: break-all;
+      font-size: 12px;
+      color: #666;
+      max-height: 60px;
+      overflow-y: auto;
+    }
+    
+    .current-status {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .status-label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    
+    .status-value {
+      font-size: 16px;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: inline-block;
+      min-width: 80px;
+    }
+    
+    .status-not-visited {
+      background: #f8f9fa;
+      color: #6c757d;
+      border: 2px solid #dee2e6;
+    }
+    
+    .status-ongoing {
+      background: #fff3cd;
+      color: #856404;
+      border: 2px solid #ffeaa7;
+    }
+    
+    .status-completed {
+      background: #d1edff;
+      color: #0c5460;
+      border: 2px solid #bee5eb;
+    }
+    
+    .status-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .status-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      background: white;
+      border: 2px solid #e0e0e0;
+      color: #333;
+    }
+    
+    .status-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .status-btn.active {
+      transform: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .btn-not-visited {
+      border-color: #6c757d;
+    }
+    
+    .btn-not-visited:hover, .btn-not-visited.active {
+      background: #f8f9fa;
+      border-color: #495057;
+    }
+    
+    .btn-ongoing {
+      border-color: #ffc107;
+    }
+    
+    .btn-ongoing:hover, .btn-ongoing.active {
+      background: #fff3cd;
+      border-color: #ffb302;
+      color: #856404;
+    }
+    
+    .btn-completed {
+      border-color: #17a2b8;
+    }
+    
+    .btn-completed:hover, .btn-completed.active {
+      background: #d1edff;
+      border-color: #138496;
+      color: #0c5460;
+    }
+    
+    .loading {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>📊 Page Status</h2>
+  </div>
+  
+  <div class="url-display" id="currentUrl">
+    Loading...
+  </div>
+  
+  <div class="current-status">
+    <div class="status-label">Current Status:</div>
+    <div class="status-value" id="currentStatus">
+      <div class="loading">Loading...</div>
+    </div>
+  </div>
+  
+  <div class="status-buttons">
+    <button class="status-btn btn-not-visited" id="btnNotVisited" data-status="not-visited">
+      ⚪ Not Visited
+    </button>
+    <button class="status-btn btn-ongoing" id="btnOngoing" data-status="ongoing">
+      🟡 Ongoing
+    </button>
+    <button class="status-btn btn-completed" id="btnCompleted" data-status="completed">
+      🟢 Completed
+    </button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
