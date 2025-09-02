@@ -12,25 +12,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   let completedItems = [];
   let ongoingItems = [];
   
-  // Load data from storage
   await loadData();
   
-  // Tab switching functionality
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const targetTab = button.dataset.tab;
       
-      // Update active button
       tabButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
       
-      // Update active panel
       tabPanels.forEach(panel => panel.classList.remove('active'));
       document.getElementById(`${targetTab}-panel`).classList.add('active');
     });
   });
   
-  // Delete all buttons
   deleteAllCompletedBtn.addEventListener('click', () => deleteAllItems('completed'));
   deleteAllOngoingBtn.addEventListener('click', () => deleteAllItems('ongoing'));
   
@@ -42,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       completedItems = [];
       ongoingItems = [];
       
-      // Separate items by status
       for (const [url, status] of Object.entries(allData)) {
         const item = { url, status };
         
@@ -53,19 +47,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
       
-      // Sort by URL (latest added items appear first - you might want to add timestamps later)
       completedItems.sort((a, b) => b.url.localeCompare(a.url));
       ongoingItems.sort((a, b) => b.url.localeCompare(a.url));
       
-      // Update counts
       completedCount.textContent = `${completedItems.length} completed item${completedItems.length !== 1 ? 's' : ''}`;
       ongoingCount.textContent = `${ongoingItems.length} ongoing item${ongoingItems.length !== 1 ? 's' : ''}`;
       
-      // Update delete all buttons
       deleteAllCompletedBtn.disabled = completedItems.length === 0;
       deleteAllOngoingBtn.disabled = ongoingItems.length === 0;
       
-      // Render lists
       renderList(completedList, completedItems, 'completed');
       renderList(ongoingList, ongoingItems, 'ongoing');
       
@@ -118,8 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const actions = document.createElement('div');
     actions.className = 'actions';
     
-    // Move button
-    const moveBtn = document.createElement('button');
     moveBtn.className = 'action-btn move-btn';
     moveBtn.title = status === 'completed' ? 'Move to Ongoing' : 'Move to Completed';
     moveBtn.textContent = status === 'completed' ? '⏪' : '✅';
@@ -129,7 +117,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       moveItem(item.url, status);
     };
     
-    // Delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'action-btn delete-btn';
     deleteBtn.textContent = '×';
@@ -188,12 +175,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return hostname;
       }
       
-      // Extract meaningful part from path
       const pathParts = path.split('/').filter(part => part);
       const lastPart = pathParts[pathParts.length - 1];
       
       if (lastPart) {
-        // Clean up the last part (remove file extensions, decode URI)
         let title = decodeURIComponent(lastPart);
         title = title.replace(/\.[^/.]+$/, ''); // Remove file extension
         title = title.replace(/[-_]/g, ' '); // Replace hyphens and underscores with spaces
@@ -211,7 +196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function removeItem(url) {
     try {
       await chrome.storage.local.remove([url]);
-      await loadData(); // Reload the data
+      await loadData(); 
     } catch (error) {
       console.error('Error removing item:', error);
       alert('Error removing item. Please try again.');
@@ -225,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       await chrome.storage.local.set({
         [url]: newStatus
       });
-      await loadData(); // Reload the data
+      await loadData(); 
     } catch (error) {
       console.error('Error moving item:', error);
       alert('Error moving item. Please try again.');
@@ -240,14 +225,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const urlsToRemove = itemsToDelete.map(item => item.url);
       await chrome.storage.local.remove(urlsToRemove);
-      await loadData(); // Reload the data
+      await loadData(); 
     } catch (error) {
       console.error('Error deleting all items:', error);
       alert('Error deleting items. Please try again.');
     }
   }
   
-  // Listen for storage changes to update the lists in real-time
   chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace === 'local') {
       loadData();
