@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const currentUrlEl = document.getElementById('currentUrl');
   const currentStatusEl = document.getElementById('currentStatus');
   const buttons = document.querySelectorAll('.status-btn');
+  const seeListsBtn = document.getElementById('seeListsBtn');
   
   let currentUrl = '';
   
@@ -42,6 +43,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (error) {
         console.error('Error saving status:', error);
       }
+    });
+  });
+  
+  seeListsBtn.addEventListener('click', () => {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('lists.html')
     });
   });
   
