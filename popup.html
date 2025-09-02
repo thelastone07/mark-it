@@ -82,6 +82,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-bottom: 15px;
     }
     
     .status-btn {
@@ -136,6 +137,30 @@
       color: #0c5460;
     }
     
+    .see-lists-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .see-lists-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .see-lists-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
     .loading {
       text-align: center;
       color: #666;
@@ -170,7 +195,11 @@
       🟢 Completed
     </button>
   </div>
+  
+  <button class="see-lists-btn" id="seeListsBtn">
+    📚 See Lists
+  </button>
 
   <script src="popup.js"></script>
 </body>
-</html> 
+</html>
