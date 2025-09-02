@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MarkMyRead - Reading Lists</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+      line-height: 1.6;
+    }
+    
+    .header {
+      background: white;
+      padding: 20px;
+      border-bottom: 1px solid #e0e0e0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .header h1 {
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .tabs {
+      display: flex;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .tab-button {
+      flex: 1;
+      padding: 15px 20px;
+      background: #f8f9fa;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab-button:hover {
+      background: #e9ecef;
+      color: #333;
+    }
+    
+    .tab-button.active {
+      background: white;
+      color: #333;
+    }
+    
+    .tab-button.active.completed-tab {
+      border-bottom-color: #17a2b8;
+      color: #0c5460;
+    }
+    
+    .tab-button.active.ongoing-tab {
+      border-bottom-color: #ffc107;
+      color: #856404;
+    }
+    
+    .tab-content {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      min-height: 400px;
+    }
+    
+    .tab-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .delete-all-btn {
+      padding: 8px 16px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .delete-all-btn:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+    
+    .delete-all-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .tab-panel {
+      display: none;
+    }
+    
+    .tab-panel.active {
+      display: block;
+    }
+    
+    .status-count {
+      font-size: 18px;
+      font-weight: 500;
+      color: #666;
+    }
+    
+    .completed-count {
+      color: #0c5460;
+    }
+    
+    .ongoing-count {
+      color: #856404;
+    }
+    
+    .url-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+    
+    .url-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      overflow: hidden;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .url-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+    }
+    
+    .completed-item {
+      border-left-color: #17a2b8;
+    }
+    
+    .ongoing-item {
+      border-left-color: #ffc107;
+    }
+    
+    .url-link {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 12px 15px;
+      text-decoration: none;
+      color: #333;
+      transition: background-color 0.2s ease;
+      position: relative;
+    }
+    
+    .url-link:hover {
+      background: #e9ecef;
+    }
+    
+    .url-title {
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 5px;
+      word-break: break-word;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      line-height: 1.3;
+    }
+    
+    .url-address {
+      font-size: 11px;
+      color: #666;
+      word-break: break-all;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      margin-bottom: 8px;
+    }
+    
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 9px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .completed-badge {
+      background: #d1edff;
+      color: #0c5460;
+    }
+    
+    .ongoing-badge {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+    
+    .empty-state-text {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state-subtext {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 3px;
+    }
+    
+    .action-btn {
+      padding: 3px 6px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      background: white;
+      color: #666;
+      text-decoration: none;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+      min-width: 20px;
+      text-align: center;
+    }
+    
+    .action-btn:hover {
+      background: #f8f9fa;
+      border-color: #999;
+    }
+    
+    .delete-btn {
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+    
+    .delete-btn:hover {
+      background: #f8d7da;
+    }
+    
+    .move-btn {
+      color: #007bff;
+      border-color: #007bff;
+      font-size: 9px;
+    }
+    
+    .move-btn:hover {
+      background: #e3f2fd;
+      color: #0056b3;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .header {
+        padding: 15px;
+      }
+      
+      .tab-content {
+        padding: 15px;
+      }
+      
+      .url-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1><img src="icons/32.png" alt="MarkMyRead" style="vertical-align: middle; margin-right: 8px; width: 24px; height: 24px;"> MarkMyRead - Reading Lists</h1>
+  </div>
+  
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-button active completed-tab" data-tab="completed">
+        🟢 Completed
+      </button>
+      <button class="tab-button ongoing-tab" data-tab="ongoing">
+        🟡 Ongoing
+      </button>
+    </div>
+    
+    <div class="tab-content">
+      <div class="tab-panel active" id="completed-panel">
+        <div class="tab-header">
+          <div class="status-count completed-count" id="completed-count">
+            Loading completed items...
+          </div>
+          <button class="delete-all-btn" id="deleteAllCompleted" disabled>
+            🗑️ Delete All
+          </button>
+        </div>
+        <ul class="url-list" id="completed-list">
+
+        </ul>
+      </div>
+      
+      <div class="tab-panel" id="ongoing-panel">
+        <div class="tab-header">
+          <div class="status-count ongoing-count" id="ongoing-count">
+            Loading ongoing items...
+          </div>
+          <button class="delete-all-btn" id="deleteAllOngoing" disabled>
+            🗑️ Delete All
+          </button>
+        </div>
+        <ul class="url-list" id="ongoing-list">
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="lists.js"></script>
+</body>
+</html>
